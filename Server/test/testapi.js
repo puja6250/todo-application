@@ -1,104 +1,104 @@
-import * as chai from 'chai';
-import chaiHttp from 'chai-http';
-import app from '../index.js'; 
+import axios from "axios";
+//import * as chai from 'chai
 
-chai.use(chaiHttp);
+import * as chai from 'chai';
+
 const { expect } = chai;
 
-describe('Task API', function () {
-  it('should add the data', function (done) {
-    chai.request(app)
-      .post('/api/create') 
-      .end((err, response) => {
-        if (err) {
-          done(err);
-        } else {
-          expect(response.status).to.be.equal(200);
-          expect(response.body).to.be.an('array');
-          response.body.forEach(item => {
-            expect(item).to.have.all.keys('title', 'description', 'status');
-          });
-          done();
-        }
+
+describe("Get Api Request",async()=>{
+    it("should be able to get ",async()=>{
+        const res= await axios.get('http://localhost:5000/api/getall');
+        console.log(res.data);
+       
+
+    })
+})
+
+
+
+describe("POST API Request ", function () {
+    it("should be able to post", async function () {
+      const res = await axios.post('http://localhost:5000/api/create', {
+        "title": "data analyst",
+        "description": "based on a project",
+        "status": "completed"
       });
+  
+      console.log(res.data);
+  
+      
+      expect(res.status).to.equal(200); // Check the response status
+      expect(res.data).to.be.an('object'); 
+      expect(res.data).to.have.property('title', 'data analyst'); 
+      expect(res.data).to.have.property('description', 'based on a project'); 
+      expect(res.data).to.have.property('status', 'completed'); 
+    });
   });
-});
+ 
 
-describe('Task API', function () {
-  it('should get all data', function (done) {
-    chai.request(app)
-      .get('/api/getall') 
-      .end((err, response) => {
-        if (err) {
-          done(err);
-        } else {
-          expect(response.status).to.be.equal(200);
-          expect(response.body).to.be.an('array');
-          response.body.forEach(user => {
-            expect(user).to.have.all.keys('title', 'description', 'status'); 
-          });
-          done();
-        }
+  describe("PUT  Api Request", function () {
+    it("should be able to update", async function () {
+        const id = '669c098343c4ce8c66427c6a';
+      const res = await axios.put(`http://localhost:5000/api/update/${id}`, {
+  
+      "title": "AI-ML",
+      "description": "using mathematical modeling",
+      "status": "completed",
       });
+  
+      console.log(res.data);
+  
+     
+      expect(res.status).to.equal(200); 
+      expect(res.data).to.be.an('object'); 
+      expect(res.data).to.have.property('title', 'data '); 
+      expect(res.data).to.have.property('description', 'based on a project');
+      expect(res.data).to.have.property('status', 'completed'); 
+    });
   });
-});
 
-describe('Task API', function () {
-  it('should get a user by ID', function (done) {
-    const userId = '669c098343c4ce8c66427c6a'; 
 
-    chai.request(app)
-      .get(`/api/getone/${userId}`) 
-      .end((err, response) => {
-        if (err) {
-          done(err);
-        } else {
-          expect(response.status).to.be.equal(200);
-          expect(response.body).to.be.an('object');
-          expect(response.body).to.have.all.keys('title', 'description', 'status');
-          done();
-        }
+
+  
+  describe("PATCH API Request", function () {
+    it("should be able to update", async function () {
+      const id = '669b75633a15e9083689d521'; 
+      const res = await axios.patch(`http://localhost:5000/api/update/${id}`, {
+        
+            
+            "title": "frontend project",
+          
+            "status": "pending",
+           
+          
       });
+  
+      console.log(res.data);
+  
+      
+      expect(res.status).to.equal(200); 
+      expect(res.data).to.be.an('object');
+      expect(res.data).to.have.property('title', 'frontend project'); 
+   
+      expect(res.data).to.have.property('status', 'pending');
+    });
   });
-});
 
-describe('Task API', function() {
-  it('should update data', function(done) {
-    const id = '669c098343c4ce8c66427c6a'; 
-    const updatedData = {
-      title: 'AI-ML',
-      description: 'using mathematical modeling',
-      status: 'completed'
-    };
-    chai.request(app)
-      .put(`/api/update/${id}`) 
-      .send(updatedData)    
-      .end((err, response) => {
-        if (err) {
-          done(err);
-        } else {  
-          expect(response.status).to.be.equal(200);
-          expect(response.body).to.include(updatedData);
-          done();
-        }
-      });
+
+
+
+
+
+  describe("DELETE API Request", function () {
+    it("should be able to delete a data", async function () {
+      const id = '669d26d54df7e3799cbb569c'; 
+      const res = await axios.delete(`http://localhost:5000/api/delete/${id}`);
+  
+      console.log(res.data);
+  
+      expect(res.status).to.equal(200); 
+     
+      
+    });
   });
-});
-
-describe('Task API', function () {
-  it('should delete the data', function (done) {
-    const id = '669b75633a15e9083689d521';  
-
-    chai.request(app)
-      .delete(`/api/delete/${id}`)  
-      .end((err, response) => {
-        if (err) {
-          done(err);
-        } else {
-          expect(response.status).to.be.equal(200);
-          expect(response.body).to.have.property('message').that.equals('Data deleted successfully');
-          done();
-        }
-      });
-  });
-});
